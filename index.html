@@ -24,6 +24,18 @@
     </div>
     <div id="dates" class="dates"></div>
   </div>
+
+  <!-- Modal for adding events -->
+  <div id="event-modal" class="modal hidden">
+    <div class="modal-content">
+        <span id="close-modal" class="close">&times;</span>
+        <h2>Add Event</h2>
+        <p id="selected-date"></p>
+        <input type="text" id="event-name" placeholder="Event name">
+        <button id="save-event">Save</button>
+    </div>
+  </div>
+  
   <script src="script.js"></script>
 </body>
 </html>
