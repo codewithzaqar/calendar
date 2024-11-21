@@ -5,13 +5,18 @@ const prevMonthButton = document.getElementById("prev-month");
 const nextMonthButton = document.getElementById("next-month");
 const modal = document.getElementById("event-modal");
 const closeModal = document.getElementById("close-modal");
-const saveEventButton = document.getElementById("save-event");
 const eventNameInput = document.getElementById("event-name");
+const addEventButton = document.getElementById("add-event");
+const eventList = document.getElementById("event-list");
 const selectedDateDisplay = document.getElementById("selected-date");
 
 let currentDate = new Date();
-let events = {}; // Store events as { "YYYY-MM-DD": ["Event1", "Event2"] }
+let events = JSON.parse(localStorage.getItem("calendarEvents")) || {};
 let selectedDate = null;
+
+function saveEvents() {
+  localStorage.setItem("calendarEvents", JSON.stringify(events));
+}
 
 function renderCalendar() {
   const year = currentDate.getFullYear();
@@ -20,23 +25,18 @@ function renderCalendar() {
   const firstDayIndex = new Date(year, month, 1).getDay();
   const daysInMonth = new Date(year, month + 1, 0).getDate();
 
-  // Clear previous dates
   datesContainer.innerHTML = "";
-
-  // Display month and year
   const monthNames = [
     "January", "February", "March", "April", "May", "June",
     "July", "August", "September", "October", "November", "December"
   ];
   monthYearDisplay.textContent = `${monthNames[month]} ${year}`;
 
-  // Add blank spaces for days before the first day of the month
   for (let i = 0; i < firstDayIndex; i++) {
     const blank = document.createElement("div");
     datesContainer.appendChild(blank);
   }
 
-  // Add dates of the month
   for (let day = 1; day <= daysInMonth; day++) {
     const dateElement = document.createElement("div");
     dateElement.textContent = day;
@@ -46,32 +46,19 @@ function renderCalendar() {
       day
     ).padStart(2, "0")}`;
 
-    // Highlight today's date
-    const today = new Date();
-    if (
-      day === today.getDate() &&
-      month === today.getMonth() &&
-      year === today.getFullYear()
-    ) {
-      dateElement.classList.add("today");
-    }
-
-    // Highlight dates with events
     if (events[dateKey]) {
       dateElement.classList.add("event");
     }
 
-    // Add click handler to open modal
     dateElement.addEventListener("click", () => openEventModal(dateKey));
-
     datesContainer.appendChild(dateElement);
   }
 }
 
 function openEventModal(date) {
   selectedDate = date;
-  selectedDateDisplay.textContent = `Selected Date: ${date}`;
-  eventNameInput.value = "";
+  selectedDateDisplay.textContent = date;
+  renderEventList();
   modal.classList.remove("hidden");
 }
 
@@ -79,19 +66,37 @@ function closeEventModal() {
   modal.classList.add("hidden");
 }
 
-function saveEvent() {
+function addEvent() {
   const eventName = eventNameInput.value.trim();
   if (eventName) {
-    if (!events[selectedDate]) {
-      events[selectedDate] = [];
-    }
+    if (!events[selectedDate]) events[selectedDate] = [];
     events[selectedDate].push(eventName);
-    closeEventModal();
+    saveEvents();
+    renderEventList();
     renderCalendar();
+    eventNameInput.value = "";
   }
 }
 
-// Navigation
+function removeEvent(index) {
+  events[selectedDate].splice(index, 1);
+  if (events[selectedDate].length === 0) delete events[selectedDate];
+  saveEvents();
+  renderEventList();
+  renderCalendar();
+}
+
+function renderEventList() {
+  eventList.innerHTML = "";
+  if (events[selectedDate]) {
+    events[selectedDate].forEach((event, index) => {
+      const li = document.createElement("li");
+      li.innerHTML = `${event} <button onclick="removeEvent(${index})">x</button>`;
+      eventList.appendChild(li);
+    });
+  }
+}
+
 prevMonthButton.addEventListener("click", () => {
   currentDate.setMonth(currentDate.getMonth() - 1);
   renderCalendar();
@@ -103,7 +108,6 @@ nextMonthButton.addEventListener("click", () => {
 });
 
 closeModal.addEventListener("click", closeEventModal);
-saveEventButton.addEventListener("click", saveEvent);
+addEventButton.addEventListener("click", addEvent);
 
-// Initial render
 renderCalendar();

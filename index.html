@@ -29,10 +29,12 @@
   <div id="event-modal" class="modal hidden">
     <div class="modal-content">
         <span id="close-modal" class="close">&times;</span>
-        <h2>Add Event</h2>
-        <p id="selected-date"></p>
-        <input type="text" id="event-name" placeholder="Event name">
-        <button id="save-event">Save</button>
+        <h2>Events on <span id="selected-date"></span></h2>
+        <ul id="event-list"></ul>
+        <div class="event-input">
+          <input type="text" id="event-name" placeholder="Add new event">
+          <button id="add-event">Add</button>
+        </div>
     </div>
   </div>
   
