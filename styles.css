@@ -6,32 +6,42 @@ body {
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: #f4f4f9;
+    background: linear-gradient(135deg, #f3e5f5, #e1bee7);
 }
 
 .calendar {
     width: 350px;
-    background: #fff;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    border-radius: 8px;
+    background: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
     overflow: hidden;
+    transition: transform 0.2s;
+}
+
+.calendar:hover {
+    transform: scale(1.02);
 }
 
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background: #6200ea;
+    background: #673ab7;
     color: white;
-    padding: 10px 20px;
+    padding: 15px 20px;
 }
 
 header button {
     background: transparent;
     border: none;
     color: white;
-    font-size: 1.2em;
+    font-size: 1.4em;
     cursor: pointer;
+    outline: none;
+}
+
+header button:focus {
+    outline: 2px solid #ffeb3b;
 }
 
 .days, .dates {
@@ -43,20 +53,36 @@ header button {
 
 .days .day {
     font-weight: bold;
+    color: #616161;
 }
 
 .dates .date {
     padding: 10px;
     cursor: pointer;
+    transition: background 0.2s color 0.2s;
 }
 
 .dates .date:hover {
-    background: #e0e0e0;
+    background: #d1c4e9;
     border-radius: 50%;
+    color: white;
 }
 
 .dates .today {
-    background: #6200ea;
+    background: #673ab7;
     color: white;
     border-radius: 50%;
+}
+
+.dates .event {
+    position: relative;
+}
+
+.dates .event::after {
+    content: "•";
+    color: #ff5252;
+    font-size: 1.5em;
+    position: absolute;
+    top: 5px;
+    right: 5px;
 }

@@ -45,6 +45,11 @@ function renderCalendar() {
             dateElement.classList.add("today")
         }
 
+        // Add event markers (example: events on the 5th and 20th of the month)
+        if (day === 5 || day === 20) {
+            dateElement.classList.add("event")
+        }
+
         datesContainer.appendChild(dateElement)
     }
 }
